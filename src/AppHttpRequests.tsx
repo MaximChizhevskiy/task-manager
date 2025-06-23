@@ -1,8 +1,8 @@
 import { type ChangeEvent, type CSSProperties, useEffect, useState } from "react"
-import Checkbox from "@mui/material/Checkbox"
 import { CreateItemForm, EditableSpan } from "@/common/components"
 import type { TodolistType } from "@/features/todolists/api/todolistApi.types.ts"
 import { todolistApi } from "@/features/todolists/api/todolistApi.ts"
+import Checkbox from "@mui/material/Checkbox"
 
 export const AppHttpRequests = () => {
   const [todolists, setTodolists] = useState<TodolistType[]>([])
@@ -12,6 +12,7 @@ export const AppHttpRequests = () => {
     // get todolists
     todolistApi.getTodolists().then((res) => {
       setTodolists(res.data)
+      console.log(res.data)
     })
   }, [])
 
