@@ -3,9 +3,9 @@ import { type Task } from "../features/todolists/ui/Todolists/TodolistItem/Todol
 import { ThemeProvider } from "@mui/material"
 import CssBaseline from "@mui/material/CssBaseline"
 import { getTheme, useAppSelector } from "@/common"
-import { selectThemeMode } from "@/app/app-selectors.ts"
 import { Main } from "@/app/Main.tsx"
 import { Header } from "@/common/components"
+import { selectThemeMode } from "@/app/app-slice.ts"
 
 export type FilterValues = "all" | "active" | "completed"
 export type Todolist = {

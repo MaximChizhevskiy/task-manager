@@ -4,10 +4,9 @@ import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
 import Switch from "@mui/material/Switch"
 import AppBar from "@mui/material/AppBar"
-import { changeThemeModeAC } from "@/app/app-reducer.ts"
-import { selectThemeMode } from "@/app/app-selectors.ts"
 import { getTheme, useAppDispatch, useAppSelector } from "@/common"
 import { NavButton } from "@/common/components"
+import { changeThemeModeAC, selectThemeMode } from "@/app/app-slice.ts"
 
 export const Header = () => {
   const dispatch = useAppDispatch()
