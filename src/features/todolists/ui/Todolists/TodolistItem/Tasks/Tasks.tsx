@@ -1,18 +1,18 @@
 import { selectTasks } from "@/features/todolists/model/tasks-selectors.ts"
-import type { Todolist } from "@/app/App.tsx"
 import List from "@mui/material/List"
 import { TaskItem } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.tsx"
 import { useAppSelector } from "@/common"
+import type { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
 
 type Props = {
-  todolist: Todolist
+  todolist: DomainTodolist
 }
 
 export const Tasks = ({ todolist }: Props) => {
-  const { todolistId, filter } = todolist
+  const { id, filter } = todolist
   const tasks = useAppSelector(selectTasks)
 
-  const todolistTasks = tasks[todolistId]
+  const todolistTasks = tasks[id]
   let filteredTasks = todolistTasks
   if (filter === "active") {
     filteredTasks = todolistTasks.filter((t) => !t.isDone)
@@ -29,7 +29,7 @@ export const Tasks = ({ todolist }: Props) => {
         <List>
           {filteredTasks &&
             filteredTasks.map((task) => {
-              return <TaskItem key={task.taskId} task={task} todolistId={todolistId} />
+              return <TaskItem key={task.taskId} task={task} todolistId={id} />
             })}
         </List>
       )}
