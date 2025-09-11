@@ -1,7 +1,7 @@
 import type { TasksState } from "@/app/App.tsx"
 import type { Task } from "../ui/Todolists/TodolistItem/TodolistItem.tsx"
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { createTodolistAC, deleteTodolistAC } from "@/features/todolists/model/todolists-slice.ts"
+import { createTodolist, deleteTodolist } from "@/features/todolists/model/todolists-slice.ts"
 
 const tasksSlice = createSlice({
   name: "tasks",
@@ -38,16 +38,20 @@ const tasksSlice = createSlice({
       }),
     }
   },
+  selectors: {
+    selectTasks: (state) => state,
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(deleteTodolistAC, (state, action) => {
-        state[action.payload.todolistId] = []
+      .addCase(deleteTodolist.fulfilled, (state, action) => {
+        if (action.payload) state[action.payload.todolistId] = []
       })
-      .addCase(createTodolistAC, (state, action) => {
-        state[action.payload.todolistId] = []
+      .addCase(createTodolist.fulfilled, (state, action) => {
+        if (action.payload) state[action.payload.id] = []
       })
   },
 })
 
 export const tasksReducer = tasksSlice.reducer
 export const { deleteTaskAC, createTaskAC, changeTaskStatusAC, changeTaskTitleAC } = tasksSlice.actions
+export const { selectTasks } = tasksSlice.selectors
