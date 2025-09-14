@@ -3,14 +3,8 @@ import { TodolistTitle } from "@/features/todolists/ui/Todolists/TodolistItem/To
 import { Tasks } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/Tasks.tsx"
 import { FilterButtons } from "@/features/todolists/ui/Todolists/TodolistItem/FilterButtons/FilterButtons.tsx"
 import { useAppDispatch } from "@/common"
-import { createTaskAC } from "@/features/todolists/model/tasks-slice.ts"
 import type { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
-
-export type Task = {
-  taskId: string
-  taskTitle: string
-  isDone: boolean
-}
+import { createTask } from "@/features/todolists/model/tasks-slice.ts"
 
 type Props = {
   todolist: DomainTodolist
@@ -21,14 +15,14 @@ export const TodolistItem = ({ todolist }: Props) => {
 
   const dispatch = useAppDispatch()
 
-  const createTask = (taskTitle: string) => {
-    dispatch(createTaskAC({ todolistId: id, taskTitle }))
+  const createTaskHandler = (title: string) => {
+    dispatch(createTask({ todolistId: id, title }))
   }
 
   return (
     <div className={"todo-item"}>
       <TodolistTitle todolist={todolist} />
-      <CreateItemForm onCreateItem={createTask} />
+      <CreateItemForm onCreateItem={createTaskHandler} />
       <Tasks todolist={todolist} />
       <FilterButtons todolist={todolist} />
     </div>
