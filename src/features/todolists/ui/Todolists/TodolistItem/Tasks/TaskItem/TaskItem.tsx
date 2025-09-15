@@ -14,26 +14,25 @@ type Props = {
   task: DomainTask
   todolistId: string
 }
+
 export const TaskItem = ({ todolistId, task }: Props) => {
   const dispatch = useAppDispatch()
 
   const deleteTaskHandler = () => {
     dispatch(deleteTask({ todolistId, taskId: task.id }))
   }
+
   const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
-    dispatch(
-      changeTaskStatus({
-        todolistId,
-        taskId: task.id,
-        status,
-      }),
-    )
+    dispatch(changeTaskStatus({ todolistId, taskId: task.id, status }))
   }
+
   const changeTaskTitle = (newTitle: string) => {
     dispatch(changeTaskTitleAC({ todolistId, taskId: task.id, taskTitle: newTitle }))
   }
+
   const isTaskCompleted = task.status === TaskStatus.Completed
+
   return (
     <ListItem sx={getListItemSx(isTaskCompleted)}>
       <div>

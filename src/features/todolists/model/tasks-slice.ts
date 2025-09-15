@@ -10,6 +10,7 @@ import type {
 } from "@/features/todolists/api/tasksApi.types.ts"
 import { TaskStatus } from "@/common/enums/enums.ts"
 import type { RootState } from "@/app/store.ts"
+import { setLoadingStatusAC } from "@/app/app-slice.ts"
 
 const tasksSlice = createAppSlice({
   name: "tasks",
@@ -29,10 +30,13 @@ const tasksSlice = createAppSlice({
       fetchTasks: create.asyncThunk(
         async (arg: { todolistId: string }, thunkAPI) => {
           try {
+            thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
             const res = await tasksApi.getTasks(arg.todolistId)
             return { tasks: res.data.items, todolistId: arg.todolistId }
           } catch (error) {
             thunkAPI.rejectWithValue(null)
+          } finally {
+            thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
           }
         },
         {

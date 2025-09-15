@@ -6,12 +6,14 @@ import Switch from "@mui/material/Switch"
 import AppBar from "@mui/material/AppBar"
 import { getTheme, useAppDispatch, useAppSelector } from "@/common"
 import { NavButton } from "@/common/components"
-import { changeThemeModeAC, selectThemeMode } from "@/app/app-slice.ts"
+import { changeThemeModeAC, selectThemeMode, statusLoading } from "@/app/app-slice.ts"
+import LinearProgress from "@mui/material/LinearProgress"
 
 export const Header = () => {
   const dispatch = useAppDispatch()
   const themeMode = useAppSelector(selectThemeMode)
   const theme = getTheme(themeMode)
+  const isLoading = useAppSelector(statusLoading)
 
   const changeThemeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
@@ -30,6 +32,7 @@ export const Header = () => {
         <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
         <Switch color={"default"} onClick={changeThemeMode} />
       </Toolbar>
+      {isLoading === "loading" && <LinearProgress />}
     </AppBar>
   )
 }
