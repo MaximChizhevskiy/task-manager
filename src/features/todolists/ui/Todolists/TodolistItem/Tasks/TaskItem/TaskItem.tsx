@@ -6,7 +6,7 @@ import ListItem from "@mui/material/ListItem"
 import type { ChangeEvent } from "react"
 import { getListItemSx } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.styles.ts"
 import { useAppDispatch } from "@/common"
-import { changeTaskStatus, changeTaskTitleAC, deleteTask } from "@/features/todolists/model/tasks-slice.ts"
+import { deleteTask, updateTask } from "@/features/todolists/model/tasks-slice.ts"
 import type { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { TaskStatus } from "@/common/enums/enums.ts"
 
@@ -24,11 +24,11 @@ export const TaskItem = ({ todolistId, task }: Props) => {
 
   const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
-    dispatch(changeTaskStatus({ todolistId, taskId: task.id, status }))
+    dispatch(updateTask({ todolistId, taskId: task.id, domainModel: { status } }))
   }
 
-  const changeTaskTitle = (newTitle: string) => {
-    dispatch(changeTaskTitleAC({ todolistId, taskId: task.id, taskTitle: newTitle }))
+  const changeTaskTitleHandler = (newTitle: string) => {
+    dispatch(updateTask({ todolistId, taskId: task.id, domainModel: { title: newTitle } }))
   }
 
   const isTaskCompleted = task.status === TaskStatus.Completed
@@ -37,7 +37,7 @@ export const TaskItem = ({ todolistId, task }: Props) => {
     <ListItem sx={getListItemSx(isTaskCompleted)}>
       <div>
         <Checkbox checked={isTaskCompleted} onChange={changeTaskStatusHandler} />
-        <EditableSpan value={task.title} onChange={changeTaskTitle} />
+        <EditableSpan value={task.title} onChange={changeTaskTitleHandler} />
       </div>
       <IconButton onClick={deleteTaskHandler}>
         <DeleteIcon />
