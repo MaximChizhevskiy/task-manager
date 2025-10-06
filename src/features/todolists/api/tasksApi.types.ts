@@ -7,7 +7,7 @@ export type DomainTask = {
   description: string | null
   deadline: string | null
   todoListId: string
-  order: string
+  order: number
   addedDate: string
   startDate: string | null
   priority: TaskPriority

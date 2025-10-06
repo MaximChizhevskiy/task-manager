@@ -2,8 +2,9 @@ import { beforeEach, expect, test } from "vitest"
 import { TaskPriority, TaskStatus } from "@/common/enums/enums.ts"
 import { createTodolist, deleteTodolist } from "@/features/todolists/model/todolists-slice.ts"
 import { createTask, deleteTask, tasksReducer, updateTask } from "@/features/todolists/model/tasks-slice.ts"
+import type { TasksState } from "@/app/App.tsx"
 
-let startState = {}
+let startState: TasksState = {}
 
 const taskDefaultValues = {
   description: "",
