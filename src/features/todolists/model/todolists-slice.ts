@@ -1,9 +1,10 @@
 import type { FilterValues } from "@/app/App.tsx"
 import type { TodolistType } from "@/features/todolists/api/todolistApi.types.ts"
 import { todolistApi } from "@/features/todolists/api/todolistApi.ts"
-import { createAppSlice } from "@/common/utils"
-import { setLoadingStatusAC } from "@/app/app-slice.ts"
+import { createAppSlice, handleServerNetworkError } from "@/common/utils"
+import { setAppErrorAC, setLoadingStatusAC } from "@/app/app-slice.ts"
 import type { RequestStatusLoading } from "@/common/types"
+import { ResultCode } from "@/common/enums/enums.ts"
 
 export const todolistsSlice = createAppSlice({
   name: "todolists",
@@ -32,7 +33,8 @@ export const todolistsSlice = createAppSlice({
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
             const res = await todolistApi.getTodolists()
             return { todolists: res.data }
-          } catch (error) {
+          } catch (error: any) {
+            thunkAPI.dispatch(setAppErrorAC({ error: error.response.data.message }))
             return thunkAPI.rejectWithValue(null)
           } finally {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
@@ -51,10 +53,14 @@ export const todolistsSlice = createAppSlice({
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
             const res = await todolistApi.createTodolists(arg.todolistTitle)
-            console.log(res.data.data.item)
-            return res.data.data.item
-          } catch (error) {
-            thunkAPI.rejectWithValue(null)
+            if (res.data.resultCode === ResultCode.Success) {
+              return res.data.data.item
+            } else {
+              const error = res.data.messages.length ? res.data.messages[0] : "Some error occurred"
+              thunkAPI.dispatch(setAppErrorAC({ error }))
+            }
+          } catch (error: any) {
+            handleServerNetworkError(thunkAPI.dispatch, error)
           } finally {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
           }

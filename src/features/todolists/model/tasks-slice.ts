@@ -1,6 +1,6 @@
 import type { TasksState } from "@/app/App.tsx"
 import { createTodolist, deleteTodolist } from "@/features/todolists/model/todolists-slice.ts"
-import { createAppSlice } from "@/common/utils"
+import { createAppSlice, handleServerNetworkError } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import type {
   CreateTasksArgs,
@@ -9,8 +9,9 @@ import type {
   UpdateTaskModel,
 } from "@/features/todolists/api/tasksApi.types.ts"
 import type { RootState } from "@/app/store.ts"
-import { setLoadingStatusAC } from "@/app/app-slice.ts"
+import { setAppErrorAC, setLoadingStatusAC } from "@/app/app-slice.ts"
 import { current } from "@reduxjs/toolkit"
+import { ResultCode } from "@/common/enums/enums.ts"
 
 const tasksSlice = createAppSlice({
   name: "tasks",
@@ -40,9 +41,14 @@ const tasksSlice = createAppSlice({
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
             const res = await tasksApi.createTask(arg)
-            return { task: res.data.data.item }
-          } catch (error) {
-            thunkAPI.rejectWithValue(null)
+            if (res.data.resultCode === ResultCode.Success) {
+              return { task: res.data.data.item }
+            } else {
+              const error = res.data.messages.length ? res.data.messages[0] : "Some error occurred"
+              thunkAPI.dispatch(setAppErrorAC({ error }))
+            }
+          } catch (error: any) {
+            handleServerNetworkError(thunkAPI.dispatch, error)
           } finally {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
           }

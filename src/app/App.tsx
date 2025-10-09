@@ -6,6 +6,7 @@ import { Main } from "@/app/Main.tsx"
 import { Header } from "@/common/components"
 import { selectThemeMode } from "@/app/app-slice.ts"
 import type { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
+import { ErrorSnackbar } from "@/common/components/ErrorSnackbar/ErrorSnackbar.tsx"
 
 export type FilterValues = "all" | "active" | "completed"
 export type Todolist = {
@@ -27,6 +28,7 @@ export const App = () => {
       <div className="app">
         <Header />
         <Main />
+        <ErrorSnackbar />
       </div>
     </ThemeProvider>
   )
