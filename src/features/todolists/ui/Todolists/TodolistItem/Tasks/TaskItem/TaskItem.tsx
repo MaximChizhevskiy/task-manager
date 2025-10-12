@@ -9,26 +9,27 @@ import { useAppDispatch } from "@/common"
 import { deleteTask, updateTask } from "@/features/todolists/model/tasks-slice.ts"
 import type { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { TaskStatus } from "@/common/enums/enums.ts"
+import type { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
 
 type Props = {
   task: DomainTask
-  todolistId: string
+  todolist: DomainTodolist
 }
 
-export const TaskItem = ({ todolistId, task }: Props) => {
+export const TaskItem = ({ todolist, task }: Props) => {
   const dispatch = useAppDispatch()
 
   const deleteTaskHandler = () => {
-    dispatch(deleteTask({ todolistId, taskId: task.id }))
+    dispatch(deleteTask({ todolistId: todolist.id, taskId: task.id }))
   }
 
   const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
-    dispatch(updateTask({ todolistId, taskId: task.id, domainModel: { status } }))
+    dispatch(updateTask({ todolistId: todolist.id, taskId: task.id, domainModel: { status } }))
   }
 
   const changeTaskTitleHandler = (newTitle: string) => {
-    dispatch(updateTask({ todolistId, taskId: task.id, domainModel: { title: newTitle } }))
+    dispatch(updateTask({ todolistId: todolist.id, taskId: task.id, domainModel: { title: newTitle } }))
   }
 
   const isTaskCompleted = task.status === TaskStatus.Completed
@@ -36,10 +37,14 @@ export const TaskItem = ({ todolistId, task }: Props) => {
   return (
     <ListItem sx={getListItemSx(isTaskCompleted)}>
       <div>
-        <Checkbox checked={isTaskCompleted} onChange={changeTaskStatusHandler} />
-        <EditableSpan value={task.title} onChange={changeTaskTitleHandler} />
+        <Checkbox
+          checked={isTaskCompleted}
+          onChange={changeTaskStatusHandler}
+          disabled={todolist.entityStatus === "loading"}
+        />
+        <EditableSpan value={task.title} onChange={changeTaskTitleHandler} entityStatus={todolist.entityStatus} />
       </div>
-      <IconButton onClick={deleteTaskHandler}>
+      <IconButton onClick={deleteTaskHandler} disabled={todolist.entityStatus === "loading"}>
         <DeleteIcon />
       </IconButton>
     </ListItem>

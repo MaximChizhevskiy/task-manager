@@ -1,6 +1,6 @@
 import type { TasksState } from "@/app/App.tsx"
 import { createTodolist, deleteTodolist } from "@/features/todolists/model/todolists-slice.ts"
-import { createAppSlice, handleServerNetworkError } from "@/common/utils"
+import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import type {
   CreateTasksArgs,
@@ -9,8 +9,7 @@ import type {
   UpdateTaskModel,
 } from "@/features/todolists/api/tasksApi.types.ts"
 import type { RootState } from "@/app/store.ts"
-import { setAppErrorAC, setLoadingStatusAC } from "@/app/app-slice.ts"
-import { current } from "@reduxjs/toolkit"
+import { setLoadingStatusAC } from "@/app/app-slice.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
 
 const tasksSlice = createAppSlice({
@@ -25,6 +24,7 @@ const tasksSlice = createAppSlice({
             const res = await tasksApi.getTasks(arg.todolistId)
             return { tasks: res.data.items, todolistId: arg.todolistId }
           } catch (error) {
+            handleServerNetworkError(thunkAPI.dispatch, error)
             thunkAPI.rejectWithValue(null)
           } finally {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
@@ -44,10 +44,9 @@ const tasksSlice = createAppSlice({
             if (res.data.resultCode === ResultCode.Success) {
               return { task: res.data.data.item }
             } else {
-              const error = res.data.messages.length ? res.data.messages[0] : "Some error occurred"
-              thunkAPI.dispatch(setAppErrorAC({ error }))
+              handleServerAppError<{ item: DomainTask }>(thunkAPI.dispatch, res.data)
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             handleServerNetworkError(thunkAPI.dispatch, error)
           } finally {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
@@ -66,9 +65,14 @@ const tasksSlice = createAppSlice({
         async (arg: DeleteTasksArgs, thunkAPI) => {
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            await tasksApi.deleteTask(arg)
-            return { todolistId: arg.todolistId, taskId: arg.taskId }
+            const res = await tasksApi.deleteTask(arg)
+            if (res.data.resultCode === ResultCode.Success) {
+              return { todolistId: arg.todolistId, taskId: arg.taskId }
+            } else {
+              handleServerAppError(thunkAPI.dispatch, res.data)
+            }
           } catch (error) {
+            handleServerNetworkError(thunkAPI.dispatch, error)
             thunkAPI.rejectWithValue(null)
           } finally {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
@@ -108,9 +112,14 @@ const tasksSlice = createAppSlice({
                 ...domainModel,
               }
               const res = await tasksApi.updateTask(arg.todolistId, arg.taskId, model)
-              return { task: res.data.data.item }
+              if (res.data.resultCode === ResultCode.Success) {
+                return { task: res.data.data.item }
+              } else {
+                handleServerAppError<{ item: DomainTask }>(thunkAPI.dispatch, res.data)
+              }
             }
           } catch (error) {
+            handleServerNetworkError(thunkAPI.dispatch, error)
             thunkAPI.rejectWithValue(null)
           } finally {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "idle" }))
@@ -136,8 +145,6 @@ const tasksSlice = createAppSlice({
   extraReducers: (builder) => {
     builder
       .addCase(deleteTodolist.fulfilled, (state, action) => {
-        console.log(action.payload)
-        console.log(current(state))
         if (action.payload) delete state[action.payload.todolistId]
       })
       .addCase(createTodolist.fulfilled, (state, action) => {
