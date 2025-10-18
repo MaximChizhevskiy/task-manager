@@ -15,8 +15,8 @@ let startState: DomainTodolist[] = []
 
 beforeEach(() => {
   startState = [
-    { id: todolistId1, addedDate: "", order: 0, title: "What to learn", filter: "all" },
-    { id: todolistId2, title: "What to buy", addedDate: "", order: 1, filter: "all" },
+    { id: todolistId1, addedDate: "", order: 0, title: "What to learn", filter: "all", entityStatus: "idle" },
+    { id: todolistId2, title: "What to buy", addedDate: "", order: 1, filter: "all", entityStatus: "idle" },
   ]
 })
 

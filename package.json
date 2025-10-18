@@ -8,12 +8,13 @@
     "build": "tsc -b && vite build --base=./",
     "test": "vitest",
     "preview": "vite preview",
-    "predeploy" : "pnpm run build",
+    "predeploy": "pnpm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^5.2.2",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.2",
@@ -21,7 +22,10 @@
     "gh-pages": "^6.3.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-redux": "^9.2.0"
+    "react-hook-form": "^7.65.0",
+    "react-redux": "^9.2.0",
+    "react-router": "^7.9.4",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/node": "^22.15.30",

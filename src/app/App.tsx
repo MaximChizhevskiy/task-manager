@@ -2,11 +2,11 @@ import "./App.css"
 import { ThemeProvider } from "@mui/material"
 import CssBaseline from "@mui/material/CssBaseline"
 import { getTheme, useAppSelector } from "@/common"
-import { Main } from "@/app/Main.tsx"
 import { Header } from "@/common/components"
 import { selectThemeMode } from "@/app/app-slice.ts"
 import type { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { ErrorSnackbar } from "@/common/components/ErrorSnackbar/ErrorSnackbar.tsx"
+import { Routing } from "@/common/routing"
 
 export type FilterValues = "all" | "active" | "completed"
 export type Todolist = {
@@ -27,7 +27,7 @@ export const App = () => {
       <CssBaseline />
       <div className="app">
         <Header />
-        <Main />
+        <Routing />
         <ErrorSnackbar />
       </div>
     </ThemeProvider>
