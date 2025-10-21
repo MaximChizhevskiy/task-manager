@@ -1,17 +1,20 @@
-import { TaskPriority, type TaskStatus } from "@/common/enums/enums.ts"
+import { TaskPriority, TaskStatus } from "@/common/enums/enums.ts"
+import { z } from "zod"
 
-export type DomainTask = {
-  id: string
-  title: string
-  status: TaskStatus
-  description: string | null
-  deadline: string | null
-  todoListId: string
-  order: number
-  addedDate: string
-  startDate: string | null
-  priority: TaskPriority
-}
+export const domainTaskSchema = z.object({
+  description: z.string().nullable(),
+  deadline: z.string().nullable(),
+  startDate: z.string().nullable(),
+  title: z.string(),
+  id: z.string(),
+  todoListId: z.string(),
+  order: z.int(),
+  addedDate: z.iso.datetime({ local: true }),
+  status: z.enum(TaskStatus),
+  priority: z.enum(TaskPriority),
+})
+
+export type DomainTask = z.infer<typeof domainTaskSchema>
 
 export type GetTasksResponse = {
   totalCount: number

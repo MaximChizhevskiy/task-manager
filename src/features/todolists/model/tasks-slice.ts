@@ -2,11 +2,12 @@ import type { TasksState } from "@/app/App.tsx"
 import { createTodolist, deleteTodolist } from "@/features/todolists/model/todolists-slice.ts"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
-import type {
-  CreateTasksArgs,
-  DeleteTasksArgs,
-  DomainTask,
-  UpdateTaskModel,
+import {
+  type CreateTasksArgs,
+  type DeleteTasksArgs,
+  type DomainTask,
+  domainTaskSchema,
+  type UpdateTaskModel,
 } from "@/features/todolists/api/tasksApi.types.ts"
 import type { RootState } from "@/app/store.ts"
 import { setLoadingStatusAC } from "@/app/app-slice.ts"
@@ -22,6 +23,7 @@ const tasksSlice = createAppSlice({
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
             const res = await tasksApi.getTasks(arg.todolistId)
+            domainTaskSchema.array().parse(res.data.items)
             return { tasks: res.data.items, todolistId: arg.todolistId }
           } catch (error) {
             handleServerNetworkError(thunkAPI.dispatch, error)
@@ -80,8 +82,6 @@ const tasksSlice = createAppSlice({
         },
         {
           fulfilled: (state, action) => {
-            console.log(action)
-            console.log(state)
             if (action.payload) {
               const tasks = state[action.payload.todolistId]
               const index = tasks.findIndex((t) => t.id === action.payload?.taskId)

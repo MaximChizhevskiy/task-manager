@@ -1,6 +1,5 @@
 import { selectThemeMode } from "@/app/app-slice"
-import { useAppSelector } from "@/common/"
-import { getTheme } from "@/common/"
+import { getTheme, useAppSelector } from "@/common/"
 import Button from "@mui/material/Button"
 import Checkbox from "@mui/material/Checkbox"
 import FormControl from "@mui/material/FormControl"
@@ -11,12 +10,8 @@ import Grid from "@mui/material/Grid"
 import TextField from "@mui/material/TextField"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import s from "./Login.module.css"
-
-type Inputs = {
-  email: string
-  password: string
-  rememberMe: boolean
-}
+import { zodResolver } from "@hookform/resolvers/zod"
+import { type Inputs, loginSchema } from "@/features/auth/lib/schemas"
 
 export const Login = () => {
   const {
@@ -25,7 +20,10 @@ export const Login = () => {
     formState: { errors },
     reset,
     control,
-  } = useForm<Inputs>({ defaultValues: { email: "", password: "", rememberMe: false } })
+  } = useForm<Inputs>({
+    defaultValues: { email: "", password: "", rememberMe: false },
+    resolver: zodResolver(loginSchema),
+  })
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     reset()
@@ -60,25 +58,14 @@ export const Login = () => {
         </FormLabel>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
-            <TextField
-              label="Email"
-              margin="normal"
-              error={!!errors.email}
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  message: "Email is not valid",
-                  value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                },
-              })}
-            />
+            <TextField label="Email" margin="normal" error={!!errors.email} {...register("email")} />
             {errors && <span className={s.errorMessage}>{errors.email?.message}</span>}
             <TextField
               type="password"
               label="Password"
               margin="normal"
               error={!!errors.password}
-              {...register("password", { required: "Password is required" })}
+              {...register("password")}
             />
             {errors && <span className={s.errorMessage}>{errors.password?.message}</span>}
             <FormControlLabel
