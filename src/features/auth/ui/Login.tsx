@@ -58,15 +58,29 @@ export const Login = () => {
         </FormLabel>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
-            <TextField label="Email" margin="normal" error={!!errors.email} {...register("email")} />
-            {errors && <span className={s.errorMessage}>{errors.email?.message}</span>}
-            <TextField
-              type="password"
-              label="Password"
-              margin="normal"
-              error={!!errors.password}
-              {...register("password")}
+            <Controller
+              name={"email"}
+              control={control}
+              render={({ field: { ...rest } }) => (
+                <TextField label="Email" margin="normal" error={!!errors.email} {...register("email")} {...rest} />
+              )}
             />
+            {errors && <span className={s.errorMessage}>{errors.email?.message}</span>}
+            <Controller
+              name={"password"}
+              control={control}
+              render={({ field: { ...rest } }) => (
+                <TextField
+                  type="password"
+                  label="Password"
+                  margin="normal"
+                  error={!!errors.password}
+                  {...register("password")}
+                  {...rest}
+                />
+              )}
+            />
+
             {errors && <span className={s.errorMessage}>{errors.password?.message}</span>}
             <FormControlLabel
               label="Remember me"

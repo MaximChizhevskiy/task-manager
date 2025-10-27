@@ -10,3 +10,10 @@
     margin: 0;
     text-transform: uppercase;
 }
+
+.button {
+    display: block;
+    max-width: 200px;
+    margin: 0 auto;
+
+}

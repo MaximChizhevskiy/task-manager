@@ -1,5 +1,5 @@
 import type { FilterValues } from "@/app/App.tsx"
-import type { TodolistType } from "@/features/todolists/api/todolistApi.types.ts"
+import { todolistSchema, type TodolistType } from "@/features/todolists/api/todolistApi.types.ts"
 import { todolistApi } from "@/features/todolists/api/todolistApi.ts"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { setLoadingStatusAC } from "@/app/app-slice.ts"
@@ -32,6 +32,7 @@ export const todolistsSlice = createAppSlice({
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
             const res = await todolistApi.getTodolists()
+            todolistSchema.array().parse(res.data)
             return { todolists: res.data }
           } catch (error: unknown) {
             handleServerNetworkError(thunkAPI.dispatch, error)
