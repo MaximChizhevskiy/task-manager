@@ -8,15 +8,21 @@ import { getTheme, useAppDispatch, useAppSelector } from "@/common"
 import { NavButton } from "@/common/components"
 import { changeThemeModeAC, selectThemeMode, statusLoading } from "@/app/app-slice.ts"
 import LinearProgress from "@mui/material/LinearProgress"
+import { logoutTC, selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
 
 export const Header = () => {
   const dispatch = useAppDispatch()
   const themeMode = useAppSelector(selectThemeMode)
   const theme = getTheme(themeMode)
   const isLoading = useAppSelector(statusLoading)
+  const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
   const changeThemeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
+  }
+
+  const logoutHandler = () => {
+    dispatch(logoutTC())
   }
 
   return (
@@ -27,8 +33,7 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
         </Container>
-        <NavButton>Sign in</NavButton>
-        <NavButton>Sign up</NavButton>
+        {isLoggedIn && <NavButton onClick={logoutHandler}>Logout</NavButton>}
         <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
         <Switch color={"default"} onClick={changeThemeMode} />
       </Toolbar>

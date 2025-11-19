@@ -1,12 +1,14 @@
 import "./App.css"
 import { ThemeProvider } from "@mui/material"
 import CssBaseline from "@mui/material/CssBaseline"
-import { getTheme, useAppSelector } from "@/common"
+import { getTheme, useAppDispatch, useAppSelector } from "@/common"
 import { Header } from "@/common/components"
 import { selectThemeMode } from "@/app/app-slice.ts"
 import type { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { ErrorSnackbar } from "@/common/components/ErrorSnackbar/ErrorSnackbar.tsx"
 import { Routing } from "@/common/routing"
+import { useEffect } from "react"
+import { initializeTC } from "@/features/auth/model/auth-slice.ts"
 
 export type FilterValues = "all" | "active" | "completed"
 export type Todolist = {
@@ -21,6 +23,11 @@ export type TasksState = {
 export const App = () => {
   const themeMode = useAppSelector(selectThemeMode)
   const theme = getTheme(themeMode)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(initializeTC())
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
