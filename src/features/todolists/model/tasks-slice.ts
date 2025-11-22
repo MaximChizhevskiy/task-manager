@@ -12,6 +12,7 @@ import {
 import type { RootState } from "@/app/store.ts"
 import { setLoadingStatusAC } from "@/app/app-slice.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
+import { clearDataAC } from "@/common/actions"
 
 const tasksSlice = createAppSlice({
   name: "tasks",
@@ -149,6 +150,9 @@ const tasksSlice = createAppSlice({
       })
       .addCase(createTodolist.fulfilled, (state, action) => {
         if (action.payload) state[action.payload.id] = []
+      })
+      .addCase(clearDataAC.type, () => {
+        return {}
       })
   },
 })

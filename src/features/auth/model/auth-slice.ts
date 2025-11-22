@@ -4,6 +4,8 @@ import { authApi } from "@/features/auth/api/authApi.ts"
 import { setLoadingStatusAC } from "@/app/app-slice.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
 import { AUTH_TOKEN } from "@/common/constants"
+import { clearDataAC } from "@/common/actions"
+import { current } from "@reduxjs/toolkit"
 
 export const authSlice = createAppSlice({
   name: "auth",
@@ -42,6 +44,7 @@ export const authSlice = createAppSlice({
           const res = await authApi.logOut()
           if (res.data.resultCode === ResultCode.Success) {
             localStorage.removeItem(AUTH_TOKEN)
+            dispatch(clearDataAC())
             return { isLoggedIn: false }
           } else {
             handleServerAppError(dispatch, res.data)
