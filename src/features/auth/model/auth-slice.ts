@@ -5,7 +5,6 @@ import { setLoadingStatusAC } from "@/app/app-slice.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
 import { AUTH_TOKEN } from "@/common/constants"
 import { clearDataAC } from "@/common/actions"
-import { current } from "@reduxjs/toolkit"
 
 export const authSlice = createAppSlice({
   name: "auth",
