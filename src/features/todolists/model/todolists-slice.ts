@@ -1,6 +1,6 @@
 import type { FilterValues } from "@/app/App.tsx"
 import { todolistSchema, type TodolistType } from "@/features/todolists/api/todolistApi.types.ts"
-import { todolistApi } from "@/features/todolists/api/todolistApi.ts"
+import { _todolistApi } from "@/features/todolists/api/_todolistApi.ts"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { setLoadingStatusAC } from "@/app/app-slice.ts"
 import type { RequestStatusLoading } from "@/common/types"
@@ -32,7 +32,7 @@ export const todolistsSlice = createAppSlice({
         async (_arg, thunkAPI) => {
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            const res = await todolistApi.getTodolists()
+            const res = await _todolistApi.getTodolists()
             todolistSchema.array().parse(res.data)
             return { todolists: res.data }
           } catch (error: unknown) {
@@ -54,7 +54,7 @@ export const todolistsSlice = createAppSlice({
         async (arg: { todolistTitle: string }, thunkAPI) => {
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            const res = await todolistApi.createTodolists(arg.todolistTitle)
+            const res = await _todolistApi.createTodolists(arg.todolistTitle)
             if (res.data.resultCode === ResultCode.Success) {
               return res.data.data.item
             } else {
@@ -79,7 +79,7 @@ export const todolistsSlice = createAppSlice({
           try {
             thunkAPI.dispatch(changeTodolistEntityStatusAC({ todolistId: arg.todolistId, entityStatus: "loading" }))
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            const res = await todolistApi.deleteTodolists(arg.todolistId)
+            const res = await _todolistApi.deleteTodolists(arg.todolistId)
             if (res.data.resultCode === ResultCode.Success) {
               return { todolistId: arg.todolistId }
             } else {
@@ -107,7 +107,7 @@ export const todolistsSlice = createAppSlice({
         async (arg: { todolistId: string; todolistTitle: string }, thunkAPI) => {
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            const res = await todolistApi.changeTodolistTitle(arg.todolistId, arg.todolistTitle)
+            const res = await _todolistApi.changeTodolistTitle(arg.todolistId, arg.todolistTitle)
             if (res.data.resultCode === ResultCode.Success) {
               return arg
             } else {

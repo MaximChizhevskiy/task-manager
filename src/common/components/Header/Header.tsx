@@ -33,7 +33,8 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
         </Container>
-        {isLoggedIn && <NavButton onClick={logoutHandler}>Logout</NavButton>}
+        {isLoggedIn && localStorage.getItem("email")}
+        {isLoggedIn && <NavButton onClick={logoutHandler}> Logout</NavButton>}
         <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
         <Switch color={"default"} onClick={changeThemeMode} />
       </Toolbar>

@@ -7,8 +7,8 @@ import { selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
 import { useAppSelector } from "@/common"
 
 export const Path = {
-  Main: "/",
-  Login: "login",
+  Main: "/task-manager",
+  Login: "/login",
   NotFound: "*",
 } as const
 

@@ -17,8 +17,10 @@ export const authSlice = createAppSlice({
         try {
           dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
           const res = await authApi.login(data)
+          const email = "email"
           if (res.data.resultCode === ResultCode.Success) {
             localStorage.setItem(AUTH_TOKEN, res.data.data.token)
+            localStorage.setItem(email, data.email)
             return { isLoggedIn: true }
           } else {
             handleServerAppError(dispatch, res.data)
