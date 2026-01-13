@@ -1,6 +1,6 @@
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import type { Inputs } from "@/features/auth/lib/schemas"
-import { authApi } from "@/features/auth/api/authApi.ts"
+import { _authApi } from "@/features/auth/api/authApi.ts"
 import { setLoadingStatusAC } from "@/app/app-slice.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
 import { AUTH_TOKEN } from "@/common/constants"
@@ -16,7 +16,7 @@ export const authSlice = createAppSlice({
       async (data: Inputs, { dispatch }) => {
         try {
           dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-          const res = await authApi.login(data)
+          const res = await _authApi.login(data)
           const email = "email"
           if (res.data.resultCode === ResultCode.Success) {
             localStorage.setItem(AUTH_TOKEN, res.data.data.token)
@@ -42,7 +42,7 @@ export const authSlice = createAppSlice({
       async (_arg, { dispatch }) => {
         try {
           dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-          const res = await authApi.logOut()
+          const res = await _authApi.logOut()
           if (res.data.resultCode === ResultCode.Success) {
             localStorage.removeItem(AUTH_TOKEN)
             dispatch(clearDataAC())
@@ -66,7 +66,7 @@ export const authSlice = createAppSlice({
       async (_arg, { dispatch }) => {
         try {
           dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-          const res = await authApi.me()
+          const res = await _authApi.me()
           if (res.data.resultCode === ResultCode.Success) {
             return { isLoggedIn: true }
           } else {
