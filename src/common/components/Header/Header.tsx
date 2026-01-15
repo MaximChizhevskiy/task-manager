@@ -6,9 +6,11 @@ import Switch from "@mui/material/Switch"
 import AppBar from "@mui/material/AppBar"
 import { getTheme, useAppDispatch, useAppSelector } from "@/common"
 import { NavButton } from "@/common/components"
-import { changeThemeModeAC, selectThemeMode, statusLoading } from "@/app/app-slice.ts"
+import { changeThemeModeAC, selectIsLoggedIn, selectThemeMode, setIsLoggedIn, statusLoading } from "@/app/app-slice.ts"
 import LinearProgress from "@mui/material/LinearProgress"
-import { logoutTC, selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
+import { useLogOutMutation } from "@/features/auth/api/authApi.ts"
+import { ResultCode } from "@/common/enums/enums.ts"
+import { AUTH_TOKEN } from "@/common/constants"
 
 export const Header = () => {
   const dispatch = useAppDispatch()
@@ -17,12 +19,19 @@ export const Header = () => {
   const isLoading = useAppSelector(statusLoading)
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
+  const [logout] = useLogOutMutation()
+
   const changeThemeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
   }
 
   const logoutHandler = () => {
-    dispatch(logoutTC())
+    logout().then((res) => {
+      if (res.data?.resultCode === ResultCode.Success) {
+        localStorage.removeItem(AUTH_TOKEN)
+        dispatch(setIsLoggedIn({ isLoggedIn: false }))
+      }
+    })
   }
 
   return (

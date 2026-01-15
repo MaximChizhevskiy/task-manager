@@ -1,4 +1,4 @@
-import { selectThemeMode } from "@/app/app-slice"
+import { selectThemeMode, setIsLoggedIn } from "@/app/app-slice"
 import { getTheme, useAppDispatch, useAppSelector } from "@/common/"
 import Button from "@mui/material/Button"
 import Checkbox from "@mui/material/Checkbox"
@@ -11,35 +11,36 @@ import TextField from "@mui/material/TextField"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import s from "./Login.module.css"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { type Inputs, loginSchema } from "@/features/auth/lib/schemas"
-import { loginTC, selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
-import { Navigate } from "react-router"
-import { Path } from "@/common/routing/Routing.tsx"
+import { type loginArgs, loginSchema } from "@/features/auth/lib/schemas"
+import { useLoginMutation } from "@/features/auth/api/authApi.ts"
+import { ResultCode } from "@/common/enums/enums.ts"
+import { AUTH_TOKEN } from "@/common/constants"
 
 export const Login = () => {
-  const dispatch = useAppDispatch()
   const themeMode = useAppSelector(selectThemeMode)
-  const isLoggedIn = useAppSelector(selectIsLoggedIn)
   const theme = getTheme(themeMode)
+  const dispatch = useAppDispatch()
+  const [login] = useLoginMutation()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     control,
-  } = useForm<Inputs>({
+  } = useForm<loginArgs>({
     defaultValues: { email: "", password: "", rememberMe: false },
     resolver: zodResolver(loginSchema),
   })
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    dispatch(loginTC(data))
-    reset()
-  }
-
-  if (isLoggedIn) {
-    return <Navigate to={Path.Main} />
+  const onSubmit: SubmitHandler<loginArgs> = (data) => {
+    login(data).then((res) => {
+      const email = "email"
+      if (res.data?.resultCode === ResultCode.Success) {
+        localStorage.setItem(AUTH_TOKEN, res.data.data.token)
+        localStorage.setItem(email, data.email)
+        dispatch(setIsLoggedIn({ isLoggedIn: true }))
+      }
+    })
   }
 
   return (

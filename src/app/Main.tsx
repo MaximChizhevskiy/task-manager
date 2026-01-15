@@ -4,9 +4,9 @@ import Container from "@mui/material/Container"
 import { Todolists } from "@/features/todolists/ui/Todolists/Todolists.tsx"
 import { useAppSelector } from "@/common"
 import { Navigate } from "react-router"
-import { selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
 import { Path } from "@/common/routing/Routing.tsx"
 import { useCreateTodolistsMutation } from "@/features/todolists/api/_todolistApi.ts"
+import { selectIsLoggedIn } from "@/app/app-slice.ts"
 
 export const Main = () => {
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
