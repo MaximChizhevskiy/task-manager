@@ -1,7 +1,7 @@
 import type { TasksState } from "@/app/App.tsx"
 import { createTodolist, deleteTodolist } from "@/features/todolists/model/todolists-slice.ts"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
-import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
+import { _tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import {
   type CreateTasksArgs,
   type DeleteTasksArgs,
@@ -23,7 +23,7 @@ const tasksSlice = createAppSlice({
         async (arg: { todolistId: string }, thunkAPI) => {
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            const res = await tasksApi.getTasks(arg.todolistId)
+            const res = await _tasksApi.getTasks(arg.todolistId)
             domainTaskSchema.array().parse(res.data.items)
             return { tasks: res.data.items, todolistId: arg.todolistId }
           } catch (error) {
@@ -43,7 +43,7 @@ const tasksSlice = createAppSlice({
         async (arg: CreateTasksArgs, thunkAPI) => {
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            const res = await tasksApi.createTask(arg)
+            const res = await _tasksApi.createTask(arg)
             if (res.data.resultCode === ResultCode.Success) {
               return { task: res.data.data.item }
             } else {
@@ -68,7 +68,7 @@ const tasksSlice = createAppSlice({
         async (arg: DeleteTasksArgs, thunkAPI) => {
           try {
             thunkAPI.dispatch(setLoadingStatusAC({ statusLoading: "loading" }))
-            const res = await tasksApi.deleteTask(arg)
+            const res = await _tasksApi.deleteTask(arg)
             if (res.data.resultCode === ResultCode.Success) {
               return { todolistId: arg.todolistId, taskId: arg.taskId }
             } else {
@@ -112,7 +112,7 @@ const tasksSlice = createAppSlice({
                 startDate: currentTask.startDate,
                 ...domainModel,
               }
-              const res = await tasksApi.updateTask(arg.todolistId, arg.taskId, model)
+              const res = await _tasksApi.updateTask(arg.todolistId, arg.taskId, model)
               if (res.data.resultCode === ResultCode.Success) {
                 return { task: res.data.data.item }
               } else {
