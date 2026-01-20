@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit"
 import type { RequestStatusLoading } from "@/common/types"
 
 export const appSlice = createSlice({
@@ -23,6 +23,17 @@ export const appSlice = createSlice({
       state.error = action.payload.error
     }),
   }),
+  extraReducers: (builder) => {
+    builder.addMatcher(isPending, (state) => {
+      state.statusLoading = "loading"
+    })
+    builder.addMatcher(isRejected, (state) => {
+      state.statusLoading = "failed"
+    })
+    builder.addMatcher(isFulfilled, (state) => {
+      state.statusLoading = "succeeded"
+    })
+  },
   selectors: {
     selectThemeMode: (state) => state.themeMode,
     statusLoading: (state) => state.statusLoading,

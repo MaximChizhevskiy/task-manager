@@ -26,16 +26,17 @@ export const App = () => {
   const theme = getTheme(themeMode)
 
   const dispatch = useAppDispatch()
-  const { data } = useMeQuery()
+  const { data, isLoading } = useMeQuery()
 
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
+    if (isLoading) return
     if (data?.resultCode === ResultCode.Success) {
       dispatch(setIsLoggedIn({ isLoggedIn: true }))
     }
     setIsInitialized(true)
-  }, [data])
+  }, [isLoading])
 
   if (!isInitialized) {
     return (
