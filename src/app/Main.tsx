@@ -5,7 +5,7 @@ import { Todolists } from "@/features/todolists/ui/Todolists/Todolists.tsx"
 import { useAppSelector } from "@/common"
 import { Navigate } from "react-router"
 import { Path } from "@/common/routing/Routing.tsx"
-import { useCreateTodolistsMutation } from "@/features/todolists/api/_todolistApi.ts"
+import { useCreateTodolistsMutation } from "@/features/todolists/api/todolistApi.ts"
 import { selectIsLoggedIn } from "@/app/app-slice.ts"
 
 export const Main = () => {

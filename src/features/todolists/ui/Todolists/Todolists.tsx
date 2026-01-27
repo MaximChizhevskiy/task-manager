@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid"
 import Paper from "@mui/material/Paper"
 import { TodolistItem } from "@/features/todolists/ui/Todolists/TodolistItem/TodolistItem.tsx"
-import { useGetTodolistsQuery } from "@/features/todolists/api/_todolistApi.ts"
-import type { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
+import { useGetTodolistsQuery } from "@/features/todolists/api/todolistApi.ts"
 import { TodolistSkeleton } from "@/features/todolists/ui/Todolists/TodolistSkeleton/TodolistSkeleton.tsx"
 import Box from "@mui/material/Box"
 import { containerSx } from "@/common"
+import type { DomainTodolist } from "@/features/todolists/lib/types"
 
 export const Todolists = () => {
   const { data: todolists, isLoading } = useGetTodolistsQuery()

@@ -10,8 +10,8 @@ import { useEffect, useState } from "react"
 import styles from "./App.module.css"
 import { useMeQuery } from "@/features/auth/api/authApi.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
+import type { FilterValues } from "@/features/todolists/lib/types"
 
-export type FilterValues = "all" | "active" | "completed"
 export type Todolist = {
   todolistId: string
   todolistTitle: string

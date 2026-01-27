@@ -2,14 +2,14 @@ import { EditableSpan } from "@/common/components/EditableSpan/EditableSpan.tsx"
 import IconButton from "@mui/material/IconButton"
 import DeleteIcon from "@mui/icons-material/Delete"
 import styles from "./TodolistTitle.module.css"
-import { type DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
 import {
   todolistApi,
   useChangeTodolistTitleMutation,
   useDeleteTodolistsMutation,
-} from "@/features/todolists/api/_todolistApi.ts"
+} from "@/features/todolists/api/todolistApi.ts"
 import { useAppDispatch } from "@/common"
 import type { RequestStatusLoading } from "@/common/types"
+import type { DomainTodolist } from "@/features/todolists/lib/types"
 
 type Props = {
   todolist: DomainTodolist
@@ -35,7 +35,7 @@ export const TodolistTitle = ({ todolist }: Props) => {
 
   const deleteTodolistHandler = () => {
     changeTodolistStatus("loading")
-    deleteTodolist("id")
+    deleteTodolist(id)
       .unwrap()
       .catch(() => {
         changeTodolistStatus("idle")

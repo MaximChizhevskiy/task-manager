@@ -1,7 +1,7 @@
 import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit"
 import type { RequestStatusLoading } from "@/common/types"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
-import { todolistApi } from "@/features/todolists/api/_todolistApi.ts"
+import { todolistApi } from "@/features/todolists/api/todolistApi.ts"
 
 export const appSlice = createSlice({
   name: "app",

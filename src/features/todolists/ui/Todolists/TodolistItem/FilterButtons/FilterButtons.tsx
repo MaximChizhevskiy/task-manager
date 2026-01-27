@@ -1,9 +1,8 @@
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
-import type { FilterValues } from "@/app/App.tsx"
 import { containerSx, useAppDispatch } from "@/common"
-import { type DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
-import { todolistApi } from "@/features/todolists/api/_todolistApi.ts"
+import { todolistApi } from "@/features/todolists/api/todolistApi.ts"
+import type { DomainTodolist, FilterValues } from "@/features/todolists/lib/types"
 
 type Props = {
   todolist: DomainTodolist
