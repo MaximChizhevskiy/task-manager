@@ -8,7 +8,10 @@ import { containerSx } from "@/common"
 import type { DomainTodolist } from "@/features/todolists/lib/types"
 
 export const Todolists = () => {
-  const { data: todolists, isLoading } = useGetTodolistsQuery()
+  const { data: todolists, isLoading } = useGetTodolistsQuery(undefined, {
+    pollingInterval: 3000,
+    skipPollingIfUnfocused: true,
+  })
 
   if (isLoading) {
     return (

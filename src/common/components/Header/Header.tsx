@@ -32,7 +32,7 @@ export const Header = () => {
         if (res.data?.resultCode === ResultCode.Success) {
           localStorage.removeItem(AUTH_TOKEN)
           dispatch(setIsLoggedIn({ isLoggedIn: false }))
-          //dispatch(baseApi.util.resetApiState())
+          dispatch(baseApi.util.resetApiState())
         }
       })
       .then(() => {

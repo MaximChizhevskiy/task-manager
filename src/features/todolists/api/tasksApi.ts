@@ -1,40 +1,25 @@
-import { instance } from "@/common"
 import type {
   CreateTasksArgs,
   DeleteTasksArgs,
   DomainTask,
   GetTasksResponse,
   UpdateTaskArgs,
-  UpdateTaskModel,
 } from "@/features/todolists/api/tasksApi.types.ts"
 import type { BaseResponse } from "@/common/types"
 import { baseApi } from "@/app/baseApi.ts"
-
-export const _tasksApi = {
-  getTasks(todolistId: string) {
-    return instance.get<GetTasksResponse>(`/todo-lists/${todolistId}/tasks`)
-  },
-  createTask(arg: CreateTasksArgs) {
-    return instance.post<BaseResponse<{ item: DomainTask }>>(`/todo-lists/${arg.todolistId}/tasks`, {
-      title: arg.title,
-    })
-  },
-  updateTask(todolistId: string, taskId: string, model: UpdateTaskModel) {
-    return instance.put<BaseResponse<{ item: DomainTask }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
-  },
-  deleteTask(arg: DeleteTasksArgs) {
-    return instance.delete<BaseResponse<{ item: DomainTask }>>(`/todo-lists/${arg.todolistId}/tasks/${arg.taskId}`)
-  },
-}
+import { PAGE_SIZE } from "@/common/constants"
 
 export const tasksApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getTasks: builder.query<GetTasksResponse, string>({
-      query: (todolistId) => ({
-        method: "GET",
-        url: `/todo-lists/${todolistId}/tasks`,
-      }),
-      providesTags: ["Task"],
+    getTasks: builder.query<GetTasksResponse, { todolistId: string; params: { page: number } }>({
+      query: ({ todolistId, params }) => {
+        return {
+          method: "GET",
+          url: `/todo-lists/${todolistId}/tasks`,
+          params: { ...params, count: PAGE_SIZE },
+        }
+      },
+      providesTags: (_result, _error, { todolistId }) => [{ type: "Task", id: todolistId }],
     }),
     createTask: builder.mutation<BaseResponse<{ item: DomainTask }>, CreateTasksArgs>({
       query: (arg: CreateTasksArgs) => ({
@@ -42,7 +27,7 @@ export const tasksApi = baseApi.injectEndpoints({
         url: `/todo-lists/${arg.todolistId}/tasks`,
         body: { title: arg.title },
       }),
-      invalidatesTags: ["Task"],
+      invalidatesTags: (_result, _error, { todolistId }) => [{ type: "Task", id: todolistId }],
     }),
     updateTask: builder.mutation<BaseResponse<{ item: DomainTask }>, UpdateTaskArgs>({
       query: (arg: UpdateTaskArgs) => ({
@@ -50,14 +35,14 @@ export const tasksApi = baseApi.injectEndpoints({
         url: `/todo-lists/${arg.todolistId}/tasks/${arg.taskId}`,
         body: arg.model,
       }),
-      invalidatesTags: ["Task"],
+      invalidatesTags: (_result, _error, { todolistId }) => [{ type: "Task", id: todolistId }],
     }),
     deleteTask: builder.mutation<BaseResponse<{ item: DomainTask }>, DeleteTasksArgs>({
       query: (arg: DeleteTasksArgs) => ({
         method: "DELETE",
         url: `/todo-lists/${arg.todolistId}/tasks/${arg.taskId}`,
       }),
-      invalidatesTags: ["Task"],
+      invalidatesTags: (_result, _error, { todolistId }) => [{ type: "Task", id: todolistId }],
     }),
   }),
 })
