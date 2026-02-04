@@ -9,7 +9,7 @@ export const todolistApi = baseApi.injectEndpoints({
       query: () => "/todo-lists",
       transformResponse: (todolists: TodolistType[]) => {
         return todolists.map((tl) => {
-          return { ...tl, filter: "all", entityStatus: "idle" }
+          return { ...tl, filter: "all" }
         })
       },
       providesTags: ["Todolist"],

@@ -10,7 +10,7 @@ type Props = {
 }
 
 export const TodolistItem = ({ todolist }: Props) => {
-  const { id, entityStatus } = todolist
+  const { id } = todolist
   const [createTask] = useCreateTaskMutation()
 
   const createTaskHandler = (title: string) => {
@@ -20,7 +20,7 @@ export const TodolistItem = ({ todolist }: Props) => {
   return (
     <div className={"todo-item"}>
       <TodolistTitle todolist={todolist} />
-      <CreateItemForm onCreateItem={createTaskHandler} disabled={entityStatus === "loading"} />
+      <CreateItemForm onCreateItem={createTaskHandler} />
       <Tasks todolist={todolist} />
       <FilterButtons todolist={todolist} />
     </div>
